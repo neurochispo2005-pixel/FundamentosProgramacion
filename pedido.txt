@@ -1,0 +1,6 @@
+PEDIDO DE McDONALD'S
+Big Mac x 2 = $178
+Papas x 1 = $45
+Refresco x 1 = $35
+--------------------
+TOTAL: $258
