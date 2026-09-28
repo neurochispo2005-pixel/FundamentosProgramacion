@@ -1,0 +1,5 @@
+REPORTE DEL PEDIDO
+Cliente: Isa
+Fecha: 29/09/2026
+Papas x 2
+TOTAL: $90

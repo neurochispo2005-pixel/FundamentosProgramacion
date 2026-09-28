@@ -1,13 +1,16 @@
-# Alumno: Aldo Villarreal Pasaran
-# Asignatura: Fundamentos de programacion
+# ALUMNO: Aldo Villarreal Pasaran
+# ASIGNATURA: Fundamentos de programacion
+# SISTEMA DE PEDIDOS DE McDONALD'S
 
-# Programa para registrar pedidos de McDonald's
+import time
+import os
+import pdb
 
-# Lista de productos
-productos = ["Big Mac", "McChicken", "McNuggets", "Papas", "Refresco"]
+productos = [                                                # Datos
+    "Big Mac", "McChicken", "McNuggets", "Papas", "Refresco"  
+]
 
-# Lista de listas (matriz)
-menu = [
+menu = [                                   # Matriz: producto, precio y existencia
     ["Big Mac", 89, 10],
     ["McChicken", 79, 10],
     ["McNuggets", 75, 10],
@@ -15,8 +18,7 @@ menu = [
     ["Refresco", 35, 10]
 ]
 
-# Diccionario con los precios
-precios = {
+precios = {                                # Diccionario de precios
     "Big Mac": 89,
     "McChicken": 79,
     "McNuggets": 75,
@@ -24,154 +26,430 @@ precios = {
     "Refresco": 35
 }
 
-# Tupla con los estados de ánimo
-estados = ("Feliz", "Triste", "Emocionado", "Con hambre")
+estados = ("Feliz", "Triste", "Emocionado", "Con hambre")      # Tupla de estados
 
+def pantalla_carga():                     # Funciones del programa
+    print("\nIniciando sistema...")
+    for i in range(1, 6):
+        print("Cargando", i * 20, "%")
+        time.sleep(0.5)
+    print("Sistema listo.\n")
 
-# Función que no regresa valor
+def capturar_fecha():
+    while True:
+        try:
+            dia = int(input("Ingresa el dia: "))
+            mes = int(input("Ingresa el mes: "))
+            anio = int(input("Ingresa el anio: "))
+
+            if not 1 <= dia <= 31:
+                print("Dia no valido.")
+                continue
+
+            if not 1 <= mes <= 12:
+                print("Mes no valido.")
+                continue
+
+            if anio < 2000:
+                print("Anio no valido.")
+                continue
+
+            Fecha = dia, mes, anio
+            return Fecha
+
+        except ValueError:
+            print("Error: utiliza numeros enteros.")
+
+def fecha_texto(Fecha):
+    dia, mes, anio = Fecha
+    return str(dia).zfill(2) + "/" + str(mes).zfill(2) + "/" + str(anio)
+
+def bienvenida(nombre):
+    mensaje = "Bienvenido/a " + nombre + " al sistema de McDonald's."
+    print("\n================================")
+    print(mensaje)
+    print("Fecha:", fecha_texto(Fecha))
+    print("================================")
+
 def mostrar_menu():
-    print("\n--- MENÚ DE McDONALD'S ---")
+    print("\n------------- MENU -------------")
     for i in range(len(menu)):
-        print(i + 1, ".", menu[i][0], "- $", menu[i][1])
+        print(
+            i + 1, ".",
+            menu[i][0],
+            "- $", menu[i][1],
+            "- Disponibles:", menu[i][2]
+        )
+    print("--------------------------------")
 
+def registrar_pedido():
+    pedido = []
+    continuar = "si"
 
-# Función que regresa un valor
+    while continuar == "si":
+        mostrar_menu()
+
+        opcion_texto = input("\nSelecciona un producto (1-5): ")
+
+        if not opcion_texto.isdigit():
+            print("Error: debes ingresar un numero entero.")
+            continue
+
+        opcion = int(opcion_texto)
+
+        if opcion < 1 or opcion > 5:
+            print("Opcion no valida.")
+            continue
+
+        producto = menu[opcion - 1][0]
+        existencia = menu[opcion - 1][2]
+
+        cantidad_texto = input("Ingresa la cantidad: ")
+
+        if not cantidad_texto.isdigit():
+            print("Error: cantidad no valida.")
+            continue
+
+        cantidad = int(cantidad_texto)
+
+        if cantidad <= 0:
+            print("La cantidad debe ser mayor a cero.")
+            continue
+
+        if cantidad > existencia:         # CORRECCION: no permite cantidades mayores a la de existencia
+            print("ERROR: no hay suficiente existencia.")
+            print("Disponibles:", existencia)
+            print("Solicitados:", cantidad)
+            continue
+
+        pedido.append([producto, cantidad])
+        menu[opcion - 1][2] -= cantidad
+
+        print("Producto agregado:", producto)
+        print("Existencia restante:", menu[opcion - 1][2])
+
+        continuar = input(
+            "\n¿Quieres agregar otro producto? (si/no): "
+        ).lower()
+
+        while continuar != "si" and continuar != "no":
+            continuar = input(
+                'Escribe solamente "si" o "no": '
+            ).lower()
+
+    return pedido
+
 def calcular_total(pedido):
     total = 0
+
     for producto in pedido:
         nombre = producto[0]
         cantidad = producto[1]
-        total = total + precios[nombre] * cantidad
+        total += precios[nombre] * cantidad
+
     return total
 
+def mostrar_resumen(pedido, total, cliente):
+    print("\n================================")
+    print("             RESUMEN")
+    print("================================")
+    print("Cliente:", cliente)
+    print("Fecha:", fecha_texto(Fecha))
 
-# Función para guardar el pedido
-def guardar_pedido(pedido, total):
+    for producto in pedido:
+        nombre = producto[0]
+        cantidad = producto[1]
+        subtotal = precios[nombre] * cantidad
+        print(nombre, "x", cantidad, "= $", subtotal)
+
+    print("--------------------------------")
+    print("EL TOTAL ES: $", total)
+
+def obtener_estado():
+    print("\n--- RETROALIMENTACION ---")
+
+    for i in range(len(estados)):
+        print(i + 1, ".", estados[i])
+
     try:
-        archivo = open("pedido.txt", "w")
-        archivo.write("PEDIDO DE McDONALD'S\n")
-        
+        opcion = int(input("Selecciona una opcion: "))
+
+        if 1 <= opcion <= 4:
+            return estados[opcion - 1]
+
+        print("Opcion no valida.")
+        return "No especificado"
+
+    except ValueError:
+        print("Debes ingresar un numero entero.")
+        return "No especificado"
+
+def guardar_pedido(pedido, total, cliente):     # Archivos
+    try:
+        archivo = open("pedido.txt", "a", encoding="utf-8") # "a" conserva los pedidos anteriores.
+        archivo.write("\n==============================\n")
+        archivo.write("       NUEVO PEDIDO\n")
+        archivo.write("==============================\n")
+        archivo.write("Cliente: " + cliente + "\n")
+        archivo.write("Fecha: " + fecha_texto(Fecha) + "\n")
 
         for producto in pedido:
             nombre = producto[0]
             cantidad = producto[1]
             subtotal = precios[nombre] * cantidad
 
-            archivo.write(nombre + " x " + str(cantidad))
-            archivo.write(" = $" + str(subtotal) + "\n")
+            archivo.write(
+                nombre + " x " + str(cantidad)
+                + " = $" + str(subtotal) + "\n"
+            )
 
-        archivo.write("--------------------\n")
+        archivo.write("------------------------------\n")
         archivo.write("TOTAL: $" + str(total) + "\n")
         archivo.close()
 
-        print("\nEl pedido se guardó correctamente.")
-    except:
-        print("Error al guardar el archivo.")
+        print("Pedido guardado en el historial.")
 
+    except PermissionError:
+        print("Error: no tienes permisos para escribir.")
 
-# Función para leer el pedido
-def leer_pedido():
+    except OSError:
+        print("Error al guardar pedido.txt.")
+
+def guardar_cliente(cliente):
     try:
-        archivo = open("pedido.txt", "r")
-        print("\n--- PEDIDO GUARDADO ---")
-        contenido = archivo.read()
-        print(contenido)
+        archivo = open("cliente.txt", "w", encoding="utf-8")
+        archivo.write("INFORMACION DEL CLIENTE\n")
+        archivo.write("Nombre: " + cliente + "\n")
+        archivo.write("Fecha: " + fecha_texto(Fecha) + "\n")
         archivo.close()
-    except:
+
+    except PermissionError:
+        print("Error de permisos en cliente.txt.")
+
+    except OSError:
+        print("Error al guardar cliente.txt.")
+
+def guardar_opinion(cliente, estado, comentario):
+    try:
+        archivo = open("opinion.txt", "w", encoding="utf-8")
+        archivo.write("RETROALIMENTACION\n")
+        archivo.write("Cliente: " + cliente + "\n")
+        archivo.write("Fecha: " + fecha_texto(Fecha) + "\n")
+        archivo.write("Estado: " + estado + "\n")
+        archivo.write("Comentario: " + comentario + "\n")
+        archivo.close()
+
+    except PermissionError:
+        print("Error de permisos en opinion.txt.")
+
+    except OSError:
+        print("Error al guardar opinion.txt.")
+
+def guardar_reporte(pedido, total, cliente):
+    try:
+        archivo = open("reporte.txt", "w", encoding="utf-8")
+        archivo.write("REPORTE DEL PEDIDO\n")
+        archivo.write("Cliente: " + cliente + "\n")
+        archivo.write("Fecha: " + fecha_texto(Fecha) + "\n")
+
+        for producto in pedido:
+            archivo.write(
+                producto[0] + " x "
+                + str(producto[1]) + "\n"
+            )
+
+        archivo.write("TOTAL: $" + str(total) + "\n")
+        archivo.close()
+
+    except PermissionError:
+        print("Error de permisos en reporte.txt.")
+
+    except OSError:
+        print("Error al guardar reporte.txt.")
+
+def mostrar_archivos():
+    archivos = [
+        "pedido.txt",
+        "cliente.txt",
+        "opinion.txt",
+        "reporte.txt"
+    ]
+
+    print("\n--- ARCHIVOS DISPONIBLES ---")
+
+    for i in range(len(archivos)):
+        if os.path.exists(archivos[i]):
+            print(i + 1, ".", archivos[i])
+        else:
+            print(i + 1, ".", archivos[i], "(no creado)")
+
+    return archivos
+
+def leer_archivo(nombre):
+    try:
+        archivo = open(nombre, "r", encoding="utf-8")
+        contenido = archivo.read()
+        archivo.close()
+
+        print("\n---", nombre, "---")
+        print(contenido)
+
+    except FileNotFoundError:
+        print("Error: el archivo no existe.")
+
+    except PermissionError:
+        print("Error: no tienes permisos para leerlo.")
+
+    except OSError:
         print("Error al leer el archivo.")
 
+def consultar_archivos():
+    archivos = mostrar_archivos()
 
-# Programa principal
+    while True:
+        try:
+            opcion = int(input("Selecciona un archivo (1-4): "))
 
-pedido = []
+            if 1 <= opcion <= 4:
+                leer_archivo(archivos[opcion - 1])
+                break
+
+            print("Selecciona una opcion entre 1 y 4.")
+
+        except ValueError:
+            print("Debes ingresar un numero entero.")
+
+def anexar_observacion():
+    try:
+        texto = input("Escribe una observacion: ")
+
+        archivo = open("pedido.txt", "a", encoding="utf-8")
+        archivo.write("\nOBSERVACION: " + texto + "\n")
+        archivo.write("Fecha: " + fecha_texto(Fecha) + "\n")
+        archivo.close()
+
+        print("Observacion agregada.")
+
+    except FileNotFoundError:
+        print("Primero debes crear un pedido.")
+
+    except PermissionError:
+        print("No tienes permisos para modificar el archivo.")
+
+    except OSError:
+        print("Error al modificar pedido.txt.")
+
+def control_inactividad():                            # Función de inactividad
+    print("\nControl de inactividad: 10 minutos.")
+
+    for segundo in range(600):                         # 600 segundos = 10 minutos.
+
+        if segundo > 0 and segundo % 60 == 0:
+            print(
+                "Tiempo transcurrido:",
+                segundo // 60,
+                "minuto(s)"
+            )
+
+        time.sleep(1)
+
+    print("\nSe alcanzaron los 10 minutos.")
+
+    while True:
+        respuesta = input(
+            '¿Quieres continuar? (si/no): '
+        ).lower()
+
+        if respuesta == "si":
+            return True
+
+        if respuesta == "no":
+            return False
+
+        print('Escribe solamente "si" o "no".')
+
+
+# -------------------- PROGRAMA PRINCIPAL --------------------
 
 print("================================")
 print("    SISTEMA DE McDONALD'S")
 print("================================")
 
-nombre_cliente = input("Ingresa el nombre del cliente: ")
+pantalla_carga()
 
-# while para registrar varios productos
-continuar = "si"
+while True:
+    nombre_cliente = input(
+        "Ingresa el nombre del cliente: "
+    ).strip()
 
-while continuar == "si":
-    mostrar_menu()
-    
-    # Leemos la entrada como texto para validar si es puramente un número entero
-    entrada_opcion = input("\nSelecciona un producto (1-5): ")
+    if nombre_cliente != "":
+        break
 
-    # .isdigit() verifica que todos los caracteres sean dígitos (evita decimales como "3.4" y letras)
-    if entrada_opcion.isdigit():
-        opcion = int(entrada_opcion)
-
-        if opcion >= 1 and opcion <= 5:
-            producto = menu[opcion - 1][0]
-
-            entrada_cantidad = input("Ingresa la cantidad: ")
-            
-            if entrada_cantidad.isdigit():
-                cantidad = int(entrada_cantidad)
-
-                if cantidad > 0:
-                    pedido.append([producto, cantidad])
-                    print("Producto agregado:", producto)
-                    
-                    # PREGUNTA MOVIDA: Solo se pregunta si el flujo fue completamente exitoso
-                    continuar = input("\n¿Quieres agregar otro producto? (si/no): ").lower()
-                    while continuar != "si" and continuar != "no":
-                        continuar = input("¿Quieres agregar otro producto? (si/no): ").lower()
-                else:
-                    print("La cantidad debe ser mayor a cero.")
-            else:
-                print("Error: la cantidad debe ser un número entero.")
-        else:
-            print("Opción no válida.")
-    else:
-        print("Error: debes ingresar un número entero válido (sin puntos ni letras).")
+    print("El nombre no puede estar vacio.")
 
 
-# Calcular total
+Fecha = capturar_fecha()
+
+bienvenida(nombre_cliente)
+
+pedido = registrar_pedido()
+
 total = calcular_total(pedido)
 
-print("\n================================")
-print("        RESUMEN")
-print("================================")
+mostrar_resumen(
+    pedido,
+    total,
+    nombre_cliente
+)
 
-print("Cliente:", nombre_cliente)
+estado = obtener_estado()
 
-for producto in pedido:
-    nombre = producto[0]
-    cantidad = producto[1]
-    print(nombre, "x", cantidad, "= $", precios[nombre] * cantidad)
+comentario = input(
+    "Escribe una opinion sobre el servicio: "
+)
 
-print("TOTAL A PAGAR: $", total)
-
-
-# Retroalimentación
-print("\n--- RETROALIMENTACIÓN ---")
-print("¿Cómo te sientes?")
-for i in range(len(estados)):
-    print(i + 1, ".", estados[i])
-
-try:
-    opcion_estado = int(input("Selecciona una opción: "))
-    if opcion_estado >= 1 and opcion_estado <= 4:
-        estado = estados[opcion_estado - 1]
-    else:
-        estado = "No especificado"
-except ValueError:
-    estado = "No especificado"
-
-comentario = input("Escribe una opinión sobre nuestro servicio: ")
-
-print("\nGracias por tu opinión,", nombre_cliente)
-print("Estado de ánimo:", estado)
+print("\nGracias por tu opinion,", nombre_cliente)
+print("Estado de animo:", estado)
 print("Comentario:", comentario)
 
-# Guardar información en un archivo
-guardar_pedido(pedido, total)
+guardar_pedido(
+    pedido,
+    total,
+    nombre_cliente
+)
 
-# Leer nuevamente el archivo
-leer_pedido()
+guardar_cliente(nombre_cliente)
 
-# GRACIAS
+guardar_opinion(
+    nombre_cliente,
+    estado,
+    comentario
+)
+
+guardar_reporte(
+    pedido,
+    total,
+    nombre_cliente
+)
+
+mostrar_archivos()
+
+consultar = input(
+    "\n¿Quieres consultar un archivo? (si/no): "
+).lower()
+
+if consultar == "si":
+    consultar_archivos()
+
+anexar = input(
+    "\n¿Quieres agregar una observacion? (si/no): "
+).lower()
+
+if anexar == "si":
+    anexar_observacion()
+
+print("\n================================")
+print("       PROGRAMA FINALIZADO")
+print("================================")
+print("Gracias,", nombre_cliente)
+print("Fecha:", fecha_texto(Fecha))
