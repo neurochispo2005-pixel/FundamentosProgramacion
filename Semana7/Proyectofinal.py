@@ -11,11 +11,11 @@ productos = [                                                # Datos
 ]
 
 menu = [                                   # Matriz: producto, precio y existencia
-    ["Big Mac", 89, 10],
-    ["McChicken", 79, 10],
-    ["McNuggets", 75, 10],
-    ["Papas", 45, 10],
-    ["Refresco", 35, 10]
+    ["Big Mac", 89, 150],
+    ["McChicken", 79, 120],
+    ["McNuggets", 75, 180],
+    ["Papas", 45, 250],
+    ["Refresco", 35, 300]
 ]
 
 precios = {                                # Diccionario de precios

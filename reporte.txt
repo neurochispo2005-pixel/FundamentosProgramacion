@@ -1,5 +1,6 @@
 REPORTE DEL PEDIDO
-Cliente: Isa
-Fecha: 29/09/2026
+Cliente: Mauricio
+Fecha: 30/09/2026
 Papas x 2
-TOTAL: $90
+Refresco x 1
+TOTAL: $125
