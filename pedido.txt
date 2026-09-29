@@ -25,3 +25,24 @@ Papas x 2 = $90
 Refresco x 1 = $35
 ------------------------------
 TOTAL: $125
+
+==============================
+       NUEVO PEDIDO
+==============================
+Cliente: & C:\Users\52442\AppData\Local\Programs\Python\Python314\python.exe c:/Users/52442/Documents/TecMilenio/FProgramacion/Semana7/Proyectofinal.py
+Fecha: 29/09/2026
+Refresco x 1 = $35
+------------------------------
+TOTAL: $35
+
+OBSERVACION: desarrollen los vasos más grandes
+Fecha: 29/09/2026
+
+==============================
+       NUEVO PEDIDO
+==============================
+Cliente: Aldo
+Fecha: 29/09/2026
+McChicken x 1 = $79
+------------------------------
+TOTAL: $79

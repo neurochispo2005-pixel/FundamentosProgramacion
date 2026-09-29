@@ -1,3 +1,3 @@
 INFORMACION DEL CLIENTE
-Nombre: Mauricio
-Fecha: 30/09/2026
+Nombre: Aldo
+Fecha: 29/09/2026

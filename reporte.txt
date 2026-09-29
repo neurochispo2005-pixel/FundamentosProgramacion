@@ -1,6 +1,5 @@
 REPORTE DEL PEDIDO
-Cliente: Mauricio
-Fecha: 30/09/2026
-Papas x 2
-Refresco x 1
-TOTAL: $125
+Cliente: Aldo
+Fecha: 29/09/2026
+McChicken x 1
+TOTAL: $79

@@ -32,7 +32,7 @@ def pantalla_carga():                     # Funciones del programa
     print("\nIniciando sistema...")
     for i in range(1, 6):
         print("Cargando", i * 20, "%")
-        time.sleep(0.5)
+        time.sleep(1.0)
     print("Sistema listo.\n")
 
 def capturar_fecha():
